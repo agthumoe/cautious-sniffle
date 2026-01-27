@@ -8,6 +8,7 @@ All endpoints are under `/api`.
 
 Each endpoint also supports additional path segments (prefix match). Example: `/api/503/what/ever/behind` returns `503`.
 
+- `GET /api/404`
 - `GET /api/500`
 - `GET /api/503`
 - `GET /api/502`

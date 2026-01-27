@@ -10,6 +10,10 @@ exports.handler = async (event) => {
   const matchesPrefix = (value, prefix) =>
     value === prefix || value.startsWith(`${prefix}/`);
 
+  if (matchesPrefix(route, '/404')) {
+    return { statusCode: 404, body: 'Not Found' };
+  }
+
   if (matchesPrefix(route, '/500')) {
     return { statusCode: 500, body: 'Internal Server Error' };
   }
