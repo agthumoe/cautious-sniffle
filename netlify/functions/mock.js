@@ -310,8 +310,8 @@ exports.handler = async (event) => {
         }
 
         // Success response - matches Skipcart auth response format
-        const delayTime = getDelayTime(scenario);
-        await delay(delayTime);
+        // const delayTime = getDelayTime(scenario);
+        // await delay(delayTime);
 
         const authResponse = {
             Result: {
@@ -370,8 +370,8 @@ exports.handler = async (event) => {
         }
 
         // Success response
-        const delayTime = getDelayTime(scenario);
-        await delay(delayTime);
+        // const delayTime = getDelayTime(scenario);
+        // await delay(delayTime);
 
         const refreshResponse = {
             Result: {
