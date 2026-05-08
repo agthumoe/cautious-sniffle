@@ -277,10 +277,7 @@ exports.handler = async (event) => {
     if (route === '/delivery/events' || route === '/api/delivery/events') {
         const requestId = `events-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         
-        // Log headers
-        console.log(`[${new Date().toISOString()}] [${requestId}] DELIVERY/EVENTS - Headers:`, JSON.stringify(event.headers, null, 2));
-        
-        // Parse and log request body
+        // Parse request body
         let body = {};
         if (event.body) {
             try {
@@ -289,6 +286,15 @@ exports.handler = async (event) => {
                 body = { raw: event.body };
             }
         }
+        
+        // Remove authorization from headers for security
+        const { authorization, ...safeHeaders } = event.headers;
+        const { Authorization, ...safeHeaders2 } = safeHeaders;
+        
+        // Log headers (without auth)
+        console.log(`[${new Date().toISOString()}] [${requestId}] DELIVERY/EVENTS - Headers:`, JSON.stringify(safeHeaders2, null, 2));
+        
+        // Log body
         console.log(`[${new Date().toISOString()}] [${requestId}] DELIVERY/EVENTS - Body:`, JSON.stringify(body, null, 2));
         
         // Log query parameters
@@ -301,7 +307,10 @@ exports.handler = async (event) => {
                 success: true,
                 message: 'Event logged',
                 requestId: requestId,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                headers: safeHeaders2,
+                body: body,
+                queryParams: queryParams
             })
         };
     }
