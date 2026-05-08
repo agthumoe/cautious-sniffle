@@ -7,6 +7,7 @@
  *   GET  /health              - Health check
  *   POST /quote               - Mock quote endpoint
  *   POST /delivery            - Mock create delivery endpoint
+ *   POST /delivery/events     - Logs headers, body, and query params
  * 
  * Query Parameters to control behavior:
  *   ?scenario=fast_1s         - Response in 1 second
@@ -269,6 +270,39 @@ exports.handler = async (event) => {
         return {
             ...result,
             headers: { ...headers, ...result.headers }
+        };
+    }
+
+    // Delivery events endpoint - logs headers and request body
+    if (route === '/delivery/events' || route === '/api/delivery/events') {
+        const requestId = `events-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        // Log headers
+        console.log(`[${new Date().toISOString()}] [${requestId}] DELIVERY/EVENTS - Headers:`, JSON.stringify(event.headers, null, 2));
+        
+        // Parse and log request body
+        let body = {};
+        if (event.body) {
+            try {
+                body = JSON.parse(event.body);
+            } catch (e) {
+                body = { raw: event.body };
+            }
+        }
+        console.log(`[${new Date().toISOString()}] [${requestId}] DELIVERY/EVENTS - Body:`, JSON.stringify(body, null, 2));
+        
+        // Log query parameters
+        console.log(`[${new Date().toISOString()}] [${requestId}] DELIVERY/EVENTS - Query Params:`, JSON.stringify(queryParams, null, 2));
+        
+        return {
+            statusCode: 200,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                success: true,
+                message: 'Event logged',
+                requestId: requestId,
+                timestamp: new Date().toISOString()
+            })
         };
     }
 
